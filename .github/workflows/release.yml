@@ -3,7 +3,7 @@ on:
     tags:
     - 'v*'
 
-name: Upload Release Asset
+name: Create release from tag
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
 
       - run: 'echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV'
 
-      - run: '(echo $VERSION; echo; git cherry -v ${VERSION}^ | cut -d" " -f3-) > CHANGELOG'
+      - run: '(echo $VERSION; echo; git cherry -v $(git describe --abbrev=0 ${VERSION}^) | cut -d" " -f3-) > CHANGELOG'
 
       - run: |
           ./build.sh
