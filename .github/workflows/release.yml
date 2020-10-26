@@ -24,6 +24,7 @@ jobs:
         run: |
           export GOROOT=/usr/local/go && \
           export PATH+=:$GOROOT/bin && \
+          go get -u golang.org/x/lint/golint && \
           ./build.sh
       - name: Create Release
         id: create_release
