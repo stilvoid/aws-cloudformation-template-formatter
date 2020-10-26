@@ -9,7 +9,10 @@ jobs:
   build:
     name: Upload Release Asset
     runs-on: ubuntu-latest
-    container: golang:latest
+    container:
+      image: golang:latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,5 +32,3 @@ jobs:
       - run: |
           set -x
           hub release create "$(for zip in ./dist/*.zip; do echo -n "-a $zip "; done)" -F CHANGELOG "$VERSION"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
