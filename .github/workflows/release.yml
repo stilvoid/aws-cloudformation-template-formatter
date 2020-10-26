@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update && \
-          sudo apt-get install -y golang golint zip
+          sudo apt-get install -y golang golint
       - name: Build project
         run: |
           export GO111MODULE=on && ./build.sh

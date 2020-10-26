@@ -12,6 +12,8 @@ VERSION=$(git describe --tags)
 declare -A PLATFORMS=([linux]=linux [darwin]=macos [windows]=windows)
 declare -A ARCHITECTURES=([386]=i386 [amd64]=amd64 [arm]=arm [arm64]=arm64)
 
+go get -v -t -d ./...
+
 # Run tests first
 golint -set_exit_status ./... || exit 1
 go vet ./... || exit 1
