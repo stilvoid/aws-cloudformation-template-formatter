@@ -13,15 +13,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - run: 'echo "VERSION=$(echo ${{ github.ref }} | cut -d/ -f3)" >> $GITHUB_ENV'
+      - run: 'git cherry -v ${VERSION}^ | cut -d" " -f3- > CHANGELOG'
       - name: Install dependencies
         run: |
           apt-get update && \
           apt-get install -y zip && \
           go get -u golang.org/x/lint/golint
-      - name: Prep version
-        run: |
-          export VERSION=$(echo "${{ github.ref }}" | cut -d/ -f3) && \
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
       - name: Build project
         run: |
           ./build.sh
@@ -33,6 +31,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
+          body_path: ./CHANGELOG
           draft: false
           prerelease: false
       - name: Upload Release Asset
