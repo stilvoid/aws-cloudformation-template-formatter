@@ -19,18 +19,19 @@ jobs:
           apt-get install -y zip && \
           go get -u golang.org/x/lint/golint
 
-      - run: 'echo "VERSION=$(echo ${{ github.ref }} | cut -d/ -f3)" >> $GITHUB_ENV'
+      - run: 'echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV'
 
       - run: '(echo $VERSION; echo; git cherry -v ${VERSION}^ | cut -d" " -f3-) > CHANGELOG'
 
       - run: |
           ./build.sh
 
-      - name: Create Release
-        run: |
+      - run: |
           set -x
           assets=()
           for asset in ./dist/*.zip; do
             assets+=("-a" "$asset")
           done
-          hub release crate "${assets[@]}" -F CHANGELOG "$VERSION"
+          hub release create "${assets[@]}" -F CHANGELOG "$VERSION"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
