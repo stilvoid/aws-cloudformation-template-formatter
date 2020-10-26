@@ -28,9 +28,9 @@ jobs:
 
       - run: |
           set -x
-          assets=()
-          for asset in ./dist/*.zip; do
-            assets+=("-a" "$asset")
+          declare -a assets
+          for zip in ./dist/*.zip; do
+            assets+=("-a" "$zip")
           done
           hub release create "${assets[@]}" -F CHANGELOG "$VERSION"
         env:
