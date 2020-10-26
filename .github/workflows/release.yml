@@ -31,4 +31,5 @@ jobs:
 
       - run: |
           set -x
+          export
           hub release create "$(for zip in ./dist/*.zip; do echo -n "-a $zip "; done)" -F CHANGELOG "$VERSION"
