@@ -28,13 +28,6 @@ jobs:
 
       - run: |
           set -x
-          assets=()
-          for zip in ./dist/*.zip; do
-            assets+=("-a" "$zip")
-          done
-          echo $assets
-          echo "$assets"
-          echo "${assets[@]}"
-          #hub release create "${assets[@]}" -F CHANGELOG "$VERSION"
+          hub release create "$(for zip in ./dist/*.zip; do echo -n "-a $zip "; done)" -F CHANGELOG "$VERSION"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
