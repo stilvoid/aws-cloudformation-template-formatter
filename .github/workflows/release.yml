@@ -22,7 +22,7 @@ jobs:
           sudo mv go /usr/local
       - name: Build project
         run: |
-          export GOROOT=/use/local/go && \
+          export GOROOT=/usr/local/go && \
           export PATH+=:$GOROOT/bin && \
           ./build.sh
       - name: Create Release
