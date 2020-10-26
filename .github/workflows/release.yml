@@ -9,23 +9,15 @@ jobs:
   build:
     name: Upload Release Asset
     runs-on: ubuntu-latest
+    container: golang:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          sudo apt-get update && \
-          sudo apt-get upgrade -y && \
-          cd /tmp && \
-          wget https://golang.org/dl/go1.15.3.linux-amd64.tar.gz && \
-          tar zxvf go1.15.3.linux-amd64.tar.gz && \
-          sudo mv go /usr/local
+          go get -u golang.org/x/lint/golint
       - name: Build project
         run: |
-          export GOROOT=/usr/local/go && \
-          export GOPATH=$HOME/go && \
-          export PATH+=:$GOROOT/bin:$GOPATH/bin && \
-          go get -u golang.org/x/lint/golint && \
           ./build.sh
       - name: Create Release
         id: create_release
