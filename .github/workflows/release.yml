@@ -23,7 +23,8 @@ jobs:
       - name: Build project
         run: |
           export GOROOT=/usr/local/go && \
-          export PATH+=:$GOROOT/bin && \
+          export GOPATH=$HOME/go && \
+          export PATH+=:$GOROOT/bin:$GOPATH/bin && \
           go get -u golang.org/x/lint/golint && \
           ./build.sh
       - name: Create Release
