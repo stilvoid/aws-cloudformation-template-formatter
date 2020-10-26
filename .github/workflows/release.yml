@@ -22,6 +22,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - run: ls
+      - run: git log
+
       - run: 'echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV'
 
       - run: '(echo $VERSION; echo; git cherry -v $(git describe --abbrev=0 HEAD^) | cut -d" " -f3-) > CHANGELOG'
