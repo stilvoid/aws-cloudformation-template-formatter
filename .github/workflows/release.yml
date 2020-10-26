@@ -13,34 +13,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - run: 'echo "VERSION=$(echo ${{ github.ref }} | cut -d/ -f3)" >> $GITHUB_ENV'
-      - run: 'git cherry -v ${VERSION}^ | cut -d" " -f3- > CHANGELOG'
-      - name: Install dependencies
-        run: |
+
+      - run: |
           apt-get update && \
           apt-get install -y zip && \
           go get -u golang.org/x/lint/golint
-      - name: Build project
-        run: |
+
+      - run: 'echo "VERSION=$(echo ${{ github.ref }} | cut -d/ -f3)" >> $GITHUB_ENV'
+
+      - run: '(echo $VERSION; echo; git cherry -v ${VERSION}^ | cut -d" " -f3-) > CHANGELOG'
+
+      - run: |
           ./build.sh
+
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body_path: ./CHANGELOG
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/cfn-format-${{ env.VERSION }}_linux-amd64.zip
-          asset_name: cfn-format-${{ env.VERSION }}_linux-amd64.zip
-          asset_content_type: application/zip
+        run: |
+          set -x
+          assets=()
+          for asset in ./dist/*.zip; do
+            assets+=("-a" "$asset")
+          done
+          hub release crate "${assets[@]}" -F CHANGELOG "$VERSION"
