@@ -14,17 +14,17 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - run: |
           apt-get update && \
           apt-get install -y hub zip && \
           go get -u golang.org/x/lint/golint
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - run: 'echo "VERSION=${GITHUB_REF##*/}" >> $GITHUB_ENV'
 
-      - run: '(echo $VERSION; echo; git cherry -v $(git describe --abbrev=0 ${VERSION}^) | cut -d" " -f3-) > CHANGELOG'
+      - run: '(echo $VERSION; echo; git cherry -v $(git describe --abbrev=0 HEAD^) | cut -d" " -f3-) > CHANGELOG'
 
       - run: |
           ./build.sh
