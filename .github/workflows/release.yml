@@ -15,10 +15,16 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update && \
-          sudo apt-get install -y golang golint
+          sudo apt-get upgrade -y && \
+          cd /tmp && \
+          wget https://golang.org/dl/go1.15.3.linux-amd64.tar.gz && \
+          tar zxvf go1.15.3.linux-amd64.tar.gz && \
+          sudo mv go /usr/local
       - name: Build project
         run: |
-          export GO111MODULE=on && ./build.sh
+          export GOROOT=/use/local/go && \
+          export PATH+=:$GOROOT/bin && \
+          ./build.sh
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
